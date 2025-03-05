@@ -1,0 +1,22 @@
+{
+  "name": "telegram-semantic-search",
+  "version": "1.0.0",
+  "description": "Semantic search for Telegram messages",
+  "main": "app.py",
+  "scripts": {
+    "build": "tsc && esbuild static/src/app.ts --bundle --minify --format=esm --outfile=static/dist/app.js",
+    "dev": "concurrently \"tsc --watch\" \"esbuild static/src/app.ts --bundle --format=esm --outfile=static/dist/app.js --watch\"",
+    "start": "python app.py",
+    "start:dev": "concurrently \"npm start\" \"cd frontend && npm run dev\""
+  },
+  "dependencies": {
+    "vue": "^3.3.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1",
+    "esbuild": "^0.18.11",
+    "typescript": "^5.0.4"
+  },
+  "author": "",
+  "license": "MIT"
+} 
