@@ -1,7 +1,7 @@
 """
 Message service for managing messages and search functionality.
 """
-from core.db import DatabaseManager
+from db.database_manager import DatabaseManager
 
 def get_messages_by_import_id(import_id: str, message_id: int, limit: int = 100, offset: int = 0):
 	"""

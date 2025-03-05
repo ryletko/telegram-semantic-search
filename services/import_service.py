@@ -9,9 +9,9 @@ import argparse
 from psycopg2.extras import Json
 from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
-from config.models import DEFAULT_MODEL, AVAILABLE_MODELS
+from models import DEFAULT_MODEL, AVAILABLE_MODELS
 from datetime import datetime
-from service.model_service import load_model
+from services.model_service import load_model
 import gc
 
 # Load environment variables
@@ -171,45 +171,3 @@ def store_in_db(conn, import_: Import, messages: list[Message], model, model_nam
         )
 
     conn.commit()
-
-
-def main():
-    parser = argparse.ArgumentParser(
-        description="Import Telegram messages with embeddings"
-    )
-    parser.add_argument("file_path", help="Path to the Telegram export JSON file")
-    parser.add_argument(
-        "--model",
-        help="Model to use for embeddings (default: from database or ai-forever/ru-en-RoSBERTa)",
-    )
-    parser.add_argument(
-        "--list-models", action="store_true", help="List available models and exit"
-    )
-
-    args = parser.parse_args()
-
-    if args.list_models:
-        print("Available models:")
-        for model, desc in AVAILABLE_MODELS.items():
-            print(f"- {model}: {desc}")
-        return
-
-    # Load the model
-    model, model_name = load_model(args.model)
-
-    # Load and process messages
-    messages = load_telegram_messages(args.file_path)
-
-    # Store in database with embeddings
-    if messages:
-        store_in_db(messages, model, model_name, args.user_id)
-        print("Import completed successfully!")
-        print(f"Used model: {model_name}")
-        if args.user_id:
-            print(f"Messages associated with user ID: {args.user_id}")
-    else:
-        print("No messages found to import.")
-
-
-if __name__ == "__main__":
-    main()

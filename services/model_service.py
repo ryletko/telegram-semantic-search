@@ -1,6 +1,6 @@
 import torch
 from sentence_transformers import SentenceTransformer
-from config.models import DEFAULT_MODEL
+from models import DEFAULT_MODEL
 
 def load_model(model_name=None):
     """Load the specified model or get it from the database"""

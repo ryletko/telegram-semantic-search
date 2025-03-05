@@ -1,10 +1,12 @@
-from service.model_service import load_model
-from service.import_service import create_embedding
-import json
-from core.db import DatabaseManager
-from service.message_service import _get_model_by_import_id
-import torch
 import gc
+import json
+
+import torch
+
+from db.database_manager import DatabaseManager
+from services.import_service import create_embedding
+from services.message_service import _get_model_by_import_id
+from services.model_service import load_model
 def search_messages(
     query, import_id, limit=20, min_similarity=0.3, page=1, contact_id=None
 ):

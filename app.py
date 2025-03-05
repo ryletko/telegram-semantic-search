@@ -8,10 +8,10 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
 # Import services
-from service.message_service import get_messages_by_import_id
-from service.import_service import load_telegram_messages, store_in_db, load_model
-from service.search_service import search_messages
-from core.init_db import initialize_database
+from services.message_service import get_messages_by_import_id
+from services.import_service import load_telegram_messages, store_in_db, load_model
+from services.search_service import search_messages
+from db.init_db import initialize_database
 # Create Flask app
 
 app = Flask(__name__)

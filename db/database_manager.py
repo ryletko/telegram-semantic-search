@@ -4,7 +4,7 @@ Database management module for handling connections and common database operatio
 import psycopg2
 from psycopg2.extras import Json
 from contextlib import contextmanager
-from config.database import DB_CONFIG
+from db.config import DB_CONFIG
 
 class DatabaseManager:
     """
