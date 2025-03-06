@@ -1,17 +1,18 @@
 """
 Main application file for the Telegram semantic search tool.
-"""
+"""     
 import os
 import secrets
-from flask import Flask, request, jsonify, session, redirect, url_for
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
 # Import services
 from services.message_service import get_messages_by_import_id
-from services.import_service import load_telegram_messages, store_in_db, load_model
-from services.search_service import search_messages
+from services.message_importer import MessageImporter
+from services.message_finder import MessageFinder
 from db.init_db import initialize_database
+from services.language_models import ModelLoader
 # Create Flask app
 
 app = Flask(__name__)
@@ -31,6 +32,8 @@ def search():
     """Search for messages using semantic similarity."""
     
     data = request.json
+    if data is None:
+        return jsonify({'error': 'No data provided'}), 400
     
     import_id = data.get("import_id")
     query = data.get('query', '')
@@ -42,7 +45,10 @@ def search():
     if not query:
         return jsonify({'error': 'Query is required'}), 400
         
-    messages = search_messages(
+    model = ModelLoader.load_model()    
+    
+    messages = MessageFinder().search_messages(
+        model=model,
         query=query,
         import_id=import_id,
         limit=limit,
@@ -88,10 +94,11 @@ def import_messages():
     """Import Telegram messages from a JSON file."""
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
-
+    
     file = request.files["file"]
-
-    if file.filename == "":
+    
+    # Explicitly check if filename is None before accessing it
+    if file.filename is None or file.filename == "":
         return jsonify({"error": "No selected file"}), 400
 
     if not file.filename.lower().endswith(".json"):
@@ -103,10 +110,10 @@ def import_messages():
     file.save(file_path)
     
     # Load the model
-    model, model_name = load_model()
+    model = ModelLoader.load_model()
 
     # Load and process messages
-    import_, processed_count = load_telegram_messages(model, model_name, file_path)
+    import_, processed_count = MessageImporter().load_telegram_messages(model, file_path)
 
     # Delete file after import
     try:
