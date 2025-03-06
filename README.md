@@ -36,7 +36,7 @@ Telegram Semantic Search allows you to import your Telegram chat export files an
 
 ```bash
 git clone https://github.com/ryletko/telegram-semantic-search.git
-cd telegram_semantic_search
+cd telegram-semantic-search
 ```
 
 ### 2. Set up a Python virtual environment
