@@ -221,7 +221,7 @@ npm run dev
 
 ### Database Schema
 
-The application uses two main tables:
+The application uses three main tables:
 
 1. **imports**: Stores metadata about imported chat exports
    - id (UUID): Primary key
@@ -240,6 +240,13 @@ The application uses two main tables:
    - embedding: Vector representation (1024 dimensions)
    - from_id: Sender ID
    - from_name: Sender name
+
+3. **message_chunks**: Stores chunks of messages for more granular embedding
+   - id: Chunk ID (auto-incremented)
+   - message_id: Foreign key to messages table
+   - import_id: Foreign key to imports table
+   - text: Chunk content
+   - embedding: Vector representation (1024 dimensions)
 
 ### Vector Search
 
